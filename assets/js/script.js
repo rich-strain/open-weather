@@ -2,7 +2,7 @@ const APIKey = 'd036f25ab5a27eb890eb96c7ec17e827';
 const geoUrl = `http://api.openweathermap.org/geo/1.0/direct`;
 const searchFormEl = document.querySelector('#searchForm');
 const cityInputEl = document.querySelector('#cityInput');
-//const citiesArray = JSON.parse(localStorage.getItem('citiesArray') || '[]');
+let citiesArray = JSON.parse(localStorage.getItem('citiesArray') || '[]');
 
 // build the URL for the city fetch request
 const prepCityUrl = function (cityName) {
@@ -24,6 +24,15 @@ const cityAlert = (cityName) => {
   $('#alert-placeholder').html(alertHtml);
 };
 
+// Display Search History
+const displaySearchHistory = () => {
+  const searchHistory = JSON.parse(localStorage.getItem('citiesArray')) || [];
+  // loop searchHistory array and create buttons for each city
+  for (const city of searchHistory) {
+    console.log(`Search History: ${city.city}, Latitude: ${city.lat}, Longitude: ${city.lon}`);
+  }
+};
+
 // Search City To Find Latitude and Longitude
 const searchCity = async (cityName) => {
   try {
@@ -34,6 +43,13 @@ const searchCity = async (cityName) => {
     const data = await response.json();
     if (data && data.length > 0) {
       const city = data[0];
+      // Create object to store city data
+      const cityObj = { city: city.name, lat: city.lat, lon: city.lon };
+      // Push to citiesArray
+      citiesArray.push(cityObj);
+      // Update localStorage
+      localStorage.setItem('citiesArray', JSON.stringify(citiesArray));
+      displaySearchHistory();
       return city;
     } else {
       console.log('No City Found, Generate Alert!');
