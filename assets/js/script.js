@@ -1,5 +1,5 @@
 const APIKey = 'd036f25ab5a27eb890eb96c7ec17e827';
-const geoUrl = `http://api.openweathermap.org/geo/1.0/direct`;
+const geoUrl = `https://api.openweathermap.org/geo/1.0/direct`;
 const searchFormEl = document.querySelector('#searchForm');
 const cityInputEl = document.querySelector('#cityInput');
 let citiesArray = JSON.parse(localStorage.getItem('citiesArray') || '[]');
