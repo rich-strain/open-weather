@@ -160,6 +160,14 @@ button {
   font-family: 'Font Awesome 5 Free';
   font-size: 0.75em;
   font-weight: 900;
+
+  transform: scale(1.1);
+  /* color: #fdd023; */
+  color: #fdd023;
+  background-image: -webkit-linear-gradient(140deg, #83c7e8, #f9a089);
+  background-clip: text;
+  -webkit-text-fill-color: transparent;
+  animation: hue 10s infinite linear;
 }
 
 /* Clouds */
