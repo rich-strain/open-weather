@@ -26,10 +26,30 @@ const cityAlert = (cityName) => {
 
 // Display Search History
 const displaySearchHistory = () => {
+  $('#searchHistory').empty();
   const searchHistory = JSON.parse(localStorage.getItem('citiesArray')) || [];
-  // loop searchHistory array and create buttons for each city
+  // loop searchHistory array and create buttons for each city that append to the searchHistory id
   for (const city of searchHistory) {
-    console.log(`Search History: ${city.city}, Latitude: ${city.lat}, Longitude: ${city.lon}`);
+    const cityBtn = $('<button>').addClass('btn btn-info btn-sm m-1 col-lg-12').text(city.city);
+    $('#searchHistory').append(cityBtn);
+  }
+};
+
+const updateLocalStorage = (cityObj) => {
+  let lat = cityObj.lat;
+  let lon = cityObj.lon;
+  console.log('Searched City Lat: ', lat);
+  console.log('Searched City Lon: ', lon);
+
+  // Check if city already exists in citiesArray
+  let cityName = cityObj.city;
+  let cityExists = citiesArray.find((obj) => obj.city === cityName);
+  console.log('City Exists: ', cityExists);
+  if (!cityExists) {
+    citiesArray.push(cityObj);
+    localStorage.setItem('citiesArray', JSON.stringify(citiesArray));
+  } else {
+    console.log('City Already Exists in Search History');
   }
 };
 
@@ -42,13 +62,14 @@ const searchCity = async (cityName) => {
     }
     const data = await response.json();
     if (data && data.length > 0) {
-      const city = data[0];
+      let city = data[0];
       // Create object to store city data
-      const cityObj = { city: city.name, lat: city.lat, lon: city.lon };
+      let cityObj = { city: city.name, lat: city.lat, lon: city.lon };
       // Push to citiesArray
-      citiesArray.push(cityObj);
-      // Update localStorage
-      localStorage.setItem('citiesArray', JSON.stringify(citiesArray));
+      updateLocalStorage(cityObj);
+      // citiesArray.push(cityObj);
+      // // Update localStorage
+      // localStorage.setItem('citiesArray', JSON.stringify(citiesArray));
       displaySearchHistory();
       return city;
     } else {
@@ -68,11 +89,11 @@ const getForecast = async (lat, lon) => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const forecast = await response.json();
-    console.log('Forecast: ', forecast);
+    //console.log('Forecast: ', forecast);
     if (forecast.list && forecast.list.length > 0) {
-      console.log('Forecast Found!', forecast.list);
+      //console.log('Forecast Found!', forecast.list);
       const list = forecast.list;
-      console.log('Forecast List Length: ', list.length);
+      //console.log('Forecast List Length: ', list.length);
 
       // Create array to store forecast data
       let forecastArray = [];
@@ -115,13 +136,13 @@ const getCurrent = async (lat, lon) => {
       throw new Error(`HTTP error! Status: ${response.status}`);
     }
     const current = await response.json();
-    console.log('Current: ', current);
+    //console.log('Current: ', current);
     if (current !== null) {
       $('#city').html(current.name.toUpperCase());
       $('#temp').html(`${Math.floor(current.main.temp)}&deg;`);
       $('#humidity').html(`${current.main.humidity} %`);
       $('#wind').html(`${current.wind.speed.toFixed(1)} mph`);
-      console.log(`Current Weather Icon: ${current.weather[0].icon}`);
+      //console.log(`Current Weather Icon: ${current.weather[0].icon}`);
       //$('#lrg-icon-container').attr('class', setIcon(current.weather[0].icon));
       $('.lrg-icon-container').attr('data-icon', current.weather[0].icon);
     } else {
@@ -133,36 +154,6 @@ const getCurrent = async (lat, lon) => {
   }
 };
 
-const setIcon = (iconCode) => {
-  console.log(`setIcon: ${iconCode}`);
-  if (clouds.includes(iconCode)) {
-    console.log(`iconCode: ${iconCode} found, returning fa-cloud`);
-    return 'fa-solid fa-cloud';
-  } else if (partlyCloudy.includes(iconCode)) {
-    return 'fa-solid fa-cloud-sun';
-  } else if (partlyCloudyNight.includes(iconCode)) {
-    return 'fa-solid fa-cloud-moon';
-  } else if (rain.includes(iconCode)) {
-    return 'fa-solid fa-cloud-showers-heavy';
-  } else if (lightRain.includes(iconCode)) {
-    return 'fa-solid fa-cloud-sun-rain';
-  } else if (lightRainNight.includes(iconCode)) {
-    return 'fa-solid fa-cloud-moon-rain';
-  } else if (thunderstorm.includes(iconCode)) {
-    return 'fa-solid fa-bolt';
-  } else if (snow.includes(iconCode)) {
-    return 'fa-solid fa-snowflake';
-  } else if (haze.includes(iconCode)) {
-    return 'fa-solid fa-smog';
-  } else if (clearSky.includes(iconCode)) {
-    return 'fa-solid fa-sun';
-  } else if (clearSkyNight.includes(iconCode)) {
-    return 'fa-solid fa-moon';
-  } else {
-    return 'fa-solid fa-poo-storm';
-  }
-};
-
 // Handle Form Submission
 const handleSubmit = (event) => {
   event.preventDefault();
@@ -171,7 +162,7 @@ const handleSubmit = (event) => {
   if (cityInput) {
     searchCity(cityInput).then((cityData) => {
       if (cityData) {
-        console.log('City Data: ', cityData);
+        //console.log('City Data: ', cityData);
         getCurrent(cityData.lat, cityData.lon);
         getForecast(cityData.lat, cityData.lon);
       } else {
@@ -186,15 +177,15 @@ const handleSubmit = (event) => {
 // Load Page with Miami Weather
 const defaultWeather = () => {
   const cityInput = 'PORT SAINT LUCIE';
-  console.log('City Input: ', cityInput);
+  console.log('Default City: ', cityInput);
   if (cityInput) {
     searchCity(cityInput).then((cityData) => {
       if (cityData) {
-        console.log('City Data: ', cityData);
+        //console.log('City Data: ', cityData);
         getCurrent(cityData.lat, cityData.lon);
         getForecast(cityData.lat, cityData.lon);
       } else {
-        console.log('Trigger City Alert');
+        console.log('City Not Found Trigger City Alert');
         const alert = cityAlert(cityInput);
       }
       //getForecast(cityData.lat, cityData.lon);
@@ -203,7 +194,8 @@ const defaultWeather = () => {
 };
 
 $(document).ready(function () {
+  //defaultWeather();
   // add event listeners
-  defaultWeather();
+  displaySearchHistory();
   $('#searchBtn').on('click', handleSubmit);
 });

@@ -9,15 +9,18 @@
     <!-- Dynamic Alert Placeholder -->
     <div class="d-flex flex-row justify-content-center text-center" id="alert-placeholder"></div>
     <div class="row pt-3 pl-2 pr-2">
-      <div class="col-md-6 weather__card d-flex flex-column align-items-center">
-        <div>
-          <form id="searchForm">
+      <div class="col-md-6 weather__card-left d-flex flex-column align-items-center">
+        <div class="flex-inline">
+          <form class="form-row" id="searchForm">
             <input type="text" name="searchCity" id="cityInput">
             <button class="btn btn-info btn-sm" type="submit" id="searchBtn">SEARCH CITY</button>
           </form>
         </div>
+        <div class="flex-row pt-3" id="searchHistory">
+          <!-- Dynamic History Displayed Here -->
+        </div>
       </div>
-      <div class="col-md-6 weather__card d-flex flex-column align-items-center">
+      <div class="col-md-6 weather__card-right d-flex flex-column align-items-center">
         <div class="p-2">
           <h2 id="temp">--&deg;</h2>
         </div>
@@ -58,6 +61,6 @@
   <script src="https://kit.fontawesome.com/55b6de9a33.js" crossorigin="anonymous"></script>
   <script src="https://cdn.jsdelivr.net/npm/dayjs@1/dayjs.min.js"></script>
   <script src="./assets/js/weatherIcons.js"></script>
-  <script src="./assets//js/fetch.js"></script>
+  <script src="./assets//js/script.js"></script>
   
 </html>

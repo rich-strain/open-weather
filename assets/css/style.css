@@ -16,6 +16,17 @@ h6 {
   font-family: 'Segoe UI', sans-serif;
   font-weight: 700;
 }
+
+input {
+  font-family: 'Segoe UI', sans-serif;
+  color: #3c4048;
+}
+
+button {
+  font-family: 'Segoe UI', sans-serif;
+  color: #3c4048;
+}
+
 .alert {
   width: 800px;
 }
@@ -30,7 +41,17 @@ h6 {
   color: #3c4048;
 }
 
-.weather__card {
+#searchHistory .btn {
+  width: 100%;
+}
+.weather__card-left {
+  width: 400px;
+  padding: 40px 30px;
+  background-color: #7f8487;
+  /* border-radius: 20px; */
+  color: #3c4048;
+}
+.weather__card-right {
   width: 400px;
   padding: 40px 30px;
   background-color: #eeeeee;
@@ -66,7 +87,6 @@ h6 {
   max-width: 400px;
 }
 
-/* Declare FontAwesome Icons Based Upon Weather Condition  */
 .lrg-icon-container {
   display: flex;
   align-items: center;
