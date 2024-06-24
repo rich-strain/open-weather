@@ -30,7 +30,11 @@ const displaySearchHistory = () => {
   const searchHistory = JSON.parse(localStorage.getItem('citiesArray')) || [];
   // loop searchHistory array and create buttons for each city that append to the searchHistory id
   for (const city of searchHistory) {
-    const cityBtn = $('<button>').addClass('btn btn-info btn-sm m-1 col-lg-12').text(city.city);
+    const cityBtn = $('<button>')
+      .addClass('btn btn-info btn-sm m-1 col-lg-12 search-city')
+      .attr('data-city', city.city)
+      .attr('data-action', 'searchCity')
+      .text(city.city);
     $('#searchHistory').append(cityBtn);
   }
 };
@@ -65,11 +69,11 @@ const searchCity = async (cityName) => {
       let city = data[0];
       // Create object to store city data
       let cityObj = { city: city.name, lat: city.lat, lon: city.lon };
-      // Push to citiesArray
+
+      // Call Function to Push to citiesArray
       updateLocalStorage(cityObj);
-      // citiesArray.push(cityObj);
-      // // Update localStorage
-      // localStorage.setItem('citiesArray', JSON.stringify(citiesArray));
+
+      // Display Previous Searches in Left Column Under Search Form
       displaySearchHistory();
       return city;
     } else {
@@ -195,7 +199,28 @@ const defaultWeather = () => {
 
 $(document).ready(function () {
   //defaultWeather();
-  // add event listeners
   displaySearchHistory();
+
+  // Event Listener for Search History Buttons
+  document.addEventListener('click', function (event) {
+    if (event.target.classList.contains('search-city')) {
+      const city = event.target.getAttribute('data-city');
+      const action = event.target.getAttribute('data-action');
+
+      if (action === 'searchCity') {
+        searchCity(city).then((cityData) => {
+          if (cityData) {
+            getCurrent(cityData.lat, cityData.lon);
+            getForecast(cityData.lat, cityData.lon);
+          } else {
+            console.log('Trigger City Alert');
+            const alert = cityAlert(city);
+          }
+        });
+      }
+    }
+  });
+
+  // Event Listener for Search Form Click
   $('#searchBtn').on('click', handleSubmit);
 });
