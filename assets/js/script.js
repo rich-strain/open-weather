@@ -31,10 +31,10 @@ const displaySearchHistory = () => {
   // loop searchHistory array and create buttons for each city that append to the searchHistory id
   for (const city of searchHistory) {
     const cityBtn = $('<button>')
-      .addClass('btn btn-info btn-sm m-1 col-lg-12 search-city')
+      .addClass('btn btn-info btn-sm m-1 col-lg-12 search-city font-weight-bold')
       .attr('data-city', city.city)
       .attr('data-action', 'searchCity')
-      .text(city.city);
+      .text(city.city.toUpperCase());
     $('#searchHistory').append(cityBtn);
   }
 };
@@ -173,14 +173,15 @@ const handleSubmit = (event) => {
         console.log('Trigger City Alert');
         const alert = cityAlert(cityInput);
       }
-      //getForecast(cityData.lat, cityData.lon);
     });
+    // Clear the input field
+    cityInputEl.value = '';
   }
 };
 
 // Load Page with Miami Weather
 const defaultWeather = () => {
-  const cityInput = 'PORT SAINT LUCIE';
+  const cityInput = 'Miami';
   console.log('Default City: ', cityInput);
   if (cityInput) {
     searchCity(cityInput).then((cityData) => {
@@ -200,6 +201,21 @@ const defaultWeather = () => {
 $(document).ready(function () {
   //defaultWeather();
   displaySearchHistory();
+
+  if (citiesArray.length > 0) {
+    const city = citiesArray[citiesArray.length - 1];
+    searchCity(city.city).then((cityData) => {
+      if (cityData) {
+        getCurrent(cityData.lat, cityData.lon);
+        getForecast(cityData.lat, cityData.lon);
+      } else {
+        console.log('Trigger City Alert');
+        const alert = cityAlert(city);
+      }
+    });
+  } else {
+    defaultWeather();
+  }
 
   // Event Listener for Search History Buttons
   document.addEventListener('click', function (event) {
