@@ -14,6 +14,10 @@ A simple weather dashboard that allows a user to retrieve the current weather an
 - WHEN I click on a city in the search history
 - THEN I am again presented with current and future conditions for that city
 
+## Acknowledgement
+
+Layout inspiration and some CSS provided by Leutrim - https://bbbootstrap.com/snippets/simple-weather-ui-76148278
+
 ## Deployed URL
 
 - https://rich-strain.github.io/open-weather/
