@@ -187,9 +187,10 @@ button {
 }
 
 /* Rain */
+/* Light Rain */
 .forecast-icon-container[data-icon='09d']::before,
 .forecast-icon-container[data-icon='09n']::before,
-.lrg--icon-container[data-icon='09d']::before,
+.lrg-icon-container[data-icon='09d']::before,
 .lrg-icon-container[data-icon='09n']::before {
   content: '\f743'; /* Font Awesome unicode for home icon */
   color: #83c7e8;

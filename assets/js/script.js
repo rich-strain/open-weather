@@ -12,7 +12,7 @@ const prepCityUrl = function (cityName) {
 const prepForecastUrl = function (lat, lon) {
   return `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&units=imperial&appid=${APIKey}`;
 };
-
+// build the URL for the current weather
 const prepCurrentUrl = function (lat, lon) {
   return `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&units=imperial&cnt=5&appid=${APIKey}`;
 };
@@ -105,13 +105,16 @@ const getForecast = async (lat, lon) => {
       for (const days of list) {
         if (dayjs(days.dt_txt).format('HH:mm:ss') === '12:00:00') {
           const forecastObj = {
-            dayOfWeek: dayjs(days.dt_txt).format('ddd'),
+            dayOfWeek: dayjs(days.dt_txt).format('MM-DD-YYYY'),
             tempHigh: Math.floor(days.main.temp_max),
             icon: days.weather[0].icon,
+            humidity: days.main.humidity,
+            wind: days.wind.speed.toFixed(1),
           };
           forecastArray.push(forecastObj);
         }
       }
+
       // Clear the forecast div for new content
       $('#five-day-forecast').empty();
       for (const day of forecastArray) {
@@ -120,7 +123,9 @@ const getForecast = async (lat, lon) => {
         const dayOfWeek = $('<span>').text(day.dayOfWeek);
         const iconContainer = $('<div>').addClass('forecast-icon-container').attr('data-icon', day.icon);
         const tempHigh = $('<span>').html(`${day.tempHigh}&deg;`);
-        forecastDiv.append(dayOfWeek, iconContainer, tempHigh);
+        const humidity = $('<div>').html(`HUMIDITY: ${day.humidity} %`);
+        const wind = $('<div>').html(`WIND: ${day.wind} mph`);
+        forecastDiv.append(dayOfWeek, iconContainer, tempHigh, wind, humidity);
         $('#five-day-forecast').append(forecastDiv);
       }
     } else {
@@ -142,6 +147,7 @@ const getCurrent = async (lat, lon) => {
     const current = await response.json();
     //console.log('Current: ', current);
     if (current !== null) {
+      $('#dateToday').html(dayjs(current.dt_txt).format('MM-DD-YYYY'));
       $('#city').html(current.name.toUpperCase());
       $('#temp').html(`${Math.floor(current.main.temp)}&deg;`);
       $('#humidity').html(`${current.main.humidity} %`);
